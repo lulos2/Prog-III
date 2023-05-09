@@ -16,20 +16,15 @@ public class ServicioDFS<T> {
     }
 
     public List<Integer> dfsForest() {
-        int verticeOrigen = this.grafo.obtenerVertice((int)(Math.random()*this.grafo.cantidadVertices()));
+        int verticeOrigen = this.grafo.obtenerVerticeRandom();
         List<Integer> resultado = new ArrayList<>();
         return dfsForest(verticeOrigen, resultado);
     }
     private List<Integer> dfsForest(int verticeOrigen, List<Integer> resultado) {
-        if(!this.grafo.obtenerAdyacentes(verticeOrigen).hasNext()){
-            return resultado;
-        }
-        resultado.add(verticeOrigen);
-        dfsForest(this.grafo.obtenerAdyacentes(verticeOrigen).next(),resultado);
         return resultado;
     }
 
-}
-/*DFS Forest: dado un grafo, realiza un recorrido en profundidad y retorna un orden posible de
+}/*
+DFS Forest: dado un grafo, realiza un recorrido en profundidad y retorna un orden posible de
 descubrimiento para los vértices durante ese recorrido.
 */

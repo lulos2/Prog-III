@@ -4,55 +4,59 @@ package practicoEspecial;
 import practico3.Arco;
 import practico3.Grafo;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class GrafoDirigido<T> implements Grafo<T> {
 
-    protected LinkedList<Integer> vertices;
-    protected LinkedList<Arco<T>> arcos;
+    protected HashMap<Integer,LinkedList<Arco<T>>> vertices;
 
     public GrafoDirigido() {
-        this.vertices = new LinkedList<Integer>();
-        this.arcos = new LinkedList<Arco<T>>();
+        this.vertices = new HashMap<>();
     }
 
     @Override
     public void agregarVertice(int verticeId) {
-        this.vertices.add(verticeId);
+        this.vertices.put(verticeId, new LinkedList<>());
     }
 
     @Override
     public void borrarVertice(int verticeId) {
+        for(Map.Entry<Integer, LinkedList<Arco<T>>> entry : vertices.entrySet()){
+            for(Arco<T> adyasente : entry.getValue())
+                if(existeArco(adyasente.getVerticeOrigen(),verticeId)){
+                    this.borrarArco(adyasente.getVerticeOrigen(),verticeId);
+            }
+        }
         vertices.remove(verticeId);
     }
 
     @Override
     public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
-        this.arcos.add(new Arco<>(verticeId1,verticeId2,etiqueta));
+        vertices.get(verticeId1).add((new Arco<>(verticeId1,verticeId2,etiqueta)));
     }
 
     @Override
     public void borrarArco(int verticeId1, int verticeId2) {
-        this.arcos.remove(this.obtenerArco(verticeId1,verticeId2));
+        vertices.get(verticeId1).remove(obtenerArco(verticeId1, verticeId2));
     }
 
     @Override
     public boolean contieneVertice(int verticeId) {
-        return this.vertices.contains(verticeId);
+        return this.vertices.containsKey(verticeId);
     }
 
     @Override
     public boolean existeArco(int verticeId1, int verticeId2) {
-        return this.arcos.contains(obtenerArco(verticeId1, verticeId2));
+        return obtenerArco(verticeId1,verticeId2) != null;
     }
 
     @Override
     public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
-        for(Arco a: arcos) {
-            if(a.getVerticeOrigen() == verticeId1) {
-                if (a.getVerticeDestino() == verticeId2) {
-                    return a;
+        LinkedList<Arco<T>> arcosDeV1 = vertices.get(verticeId1);
+        if(arcosDeV1!=null) {
+            for (Arco<T> i : arcosDeV1) {
+                if (i.getVerticeDestino() == verticeId2) {
+                    return i;
                 }
             }
         }
@@ -66,43 +70,46 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override
     public int cantidadArcos() {
-        return arcos.size();
+        int cantidad = 0;
+        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : vertices.entrySet()) {
+            cantidad += entry.getValue().size();
+        }
+        return cantidad;
     }
 
     @Override
     public Iterator<Integer> obtenerVertices() {
-        return vertices.iterator();
+        return vertices.keySet().iterator();
     }
 
     @Override
     public Iterator<Integer> obtenerAdyacentes(int verticeId) {
-        LinkedList<Integer> adyacentes = new LinkedList<>();
-        for (Arco<T> a : arcos) {
-            if (a.getVerticeOrigen() == verticeId) {
-                adyacentes.add(a.getVerticeDestino());
-            }
+        List<Arco<T>> arcos = vertices.get(verticeId);
+        List<Integer> adyacentes = new ArrayList<>();
+        for (Arco<T> arco : arcos) {
+            adyacentes.add(arco.getVerticeDestino());
         }
         return adyacentes.iterator();
     }
 
     @Override
     public Iterator<Arco<T>> obtenerArcos() {
-        LinkedList<Arco<T>> arcosResult = new LinkedList<>(arcos);
+        LinkedList<Arco<T>> arcosResult = new LinkedList<>();
+        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : vertices.entrySet()) {
+            arcosResult.addAll(entry.getValue());
+        }
         return arcosResult.iterator();
     }
 
     @Override
     public Iterator<Arco<T>> obtenerArcos(int verticeId) {
-        LinkedList<Arco<T>> arcosVertice = new LinkedList<Arco<T>>();
-        for (Arco<T> a : arcos) {
-            if (a.getVerticeOrigen() == verticeId) {
-                arcosVertice.add(a);
-            }
-        }
+        LinkedList<Arco<T>> arcosVertice = new LinkedList<>(vertices.get(verticeId));
         return arcosVertice.iterator();
     }
 
-    public int obtenerVertice(int pos) {
-        return this.vertices.get(pos);
+    public Integer obtenerVerticeRandom() {
+        Integer[] keys = vertices.keySet().stream().mapToInt(Integer::intValue).boxed().toArray(Integer[]::new);
+        return keys[(int) (Math.random() * keys.length)];
     }
+
 }
