@@ -1,12 +1,10 @@
 package practicoEspecial;
 
 
+import practico3.Arco;
 import practico3.Vertice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ServicioDFS<T> {
 
@@ -16,22 +14,28 @@ public class ServicioDFS<T> {
         this.grafo = grafo;
     }
 
+    //dfsForest: tiene una complejidad temporal O(N^2) Ya que en el peor caso, cada vértice en el grafo tiene un arco a todos los demás vértices, por lo que en cada llamada recursiva, se debe hacer una llamada a la función obtenerAdyacentes para cada uno de los  vértices
     public List<Integer> dfsForest() {
-        int verticeOrigen = this.grafo.obtenerVerticeRandom();
         List<Integer> resultado = new ArrayList<>();
-        List<Integer> visitados = new ArrayList<>();
-        dfsForest(verticeOrigen, resultado, visitados);
+        HashMap<Integer,Boolean> visitados = new HashMap<>();
+        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : this.grafo.vertices.entrySet()) {
+            if(!visitados.containsKey(entry.getKey())) {
+                List<Integer> arbol = new ArrayList<>();
+                dfsForest(entry.getKey(), arbol, visitados);
+                resultado.addAll(arbol);
+            }
+        }
         return resultado;
     }
-    private void dfsForest(int verticeActual, List<Integer> arbol, List<Integer> visitados) {
-        if(visitados.contains(verticeActual)) {
+    private void dfsForest(int verticeActual, List<Integer> arbol, HashMap<Integer,Boolean> visitados) {
+        if(visitados.containsKey(verticeActual)) {
             return;
         }
-        visitados.add(verticeActual);
+        visitados.put(verticeActual,true);
         arbol.add(verticeActual);
-        Iterator<Integer> adyasentes = this.grafo.obtenerAdyacentes(verticeActual);
-        while(adyasentes.hasNext()) {
-            dfsForest(adyasentes.next(), arbol, visitados);
+        Iterator<Integer> adyacentes = this.grafo.obtenerAdyacentes(verticeActual);
+        while(adyacentes.hasNext()) {
+            dfsForest(adyacentes.next(), arbol, visitados);
         }
     }
 
