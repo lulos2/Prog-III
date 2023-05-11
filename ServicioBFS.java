@@ -12,35 +12,23 @@ public class ServicioBFS<T> {
         this.grafo = grafo;
     }
 
-    /*public List<Integer> bfsForest() {
-        Integer verticeOrigen = 1;
-        List<Integer> resultado = new ArrayList<>();
-        LinkedList <Integer> cola = new LinkedList<>();
-        HashMap<Integer,Integer> visitados = new HashMap<>();
-        Iterator<Integer> adyasentes = this.grafo.obtenerAdyacentes(verticeOrigen);
-        cola.add(verticeOrigen);
-        while (!cola.isEmpty()){
-            cola.add(adyasentes.next());
-        }
-        return resultado;
-    }*/
 
+    //bfsForest(): tiene una eficiencia de O(n^2) donde en el peor caso hay n vertices conectados con n aristas y en cada vertice tengo que preguntar por cada arista
     public List<Integer> bfsForest() {
         HashMap<Integer, Boolean> visitados = new HashMap<>();
         List<Integer> resultado = new ArrayList<>();
         LinkedList<Integer> cola = new LinkedList<>();
 
-        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : this.grafo.vertices.entrySet()){
-            if(!visitados.containsKey(entry.getKey())){
+        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : this.grafo.vertices.entrySet()) {
+            if(!visitados.containsKey(entry.getKey())) {
                 List<Integer> arbol = new ArrayList<>();
                 bfsForest(arbol, cola, visitados, entry.getKey());
                 resultado.addAll(arbol);
             }
         }
-
         return resultado;
     }
-    private void bfsForest(List<Integer> arbol, LinkedList<Integer> cola, HashMap<Integer, Boolean> visitados, Integer verticeActual){
+    private void bfsForest(List<Integer> arbol, LinkedList<Integer> cola, HashMap<Integer, Boolean> visitados, Integer verticeActual) {
         if(visitados.containsKey(verticeActual)) {
             return;
         }
@@ -50,7 +38,8 @@ public class ServicioBFS<T> {
         while (adyacentes.hasNext()) {
             cola.addFirst(adyacentes.next());
         }
-
-
+        if(!cola.isEmpty()) {
+            bfsForest(arbol, cola, visitados, cola.removeLast());
+        }
     }
 }
