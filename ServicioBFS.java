@@ -4,11 +4,11 @@ import practico3.Arco;
 
 import java.util.*;
 
-public class ServicioBFS<T> {
+public class ServicioBFS {
 
-    final private GrafoDirigido<T> grafo;
+    private Grafo<?> grafo;
 
-    public ServicioBFS(GrafoDirigido<T> grafo) {
+    public ServicioBFS(Grafo<?> grafo) {
         this.grafo = grafo;
     }
 
@@ -19,10 +19,10 @@ public class ServicioBFS<T> {
         List<Integer> resultado = new ArrayList<>();
         LinkedList<Integer> cola = new LinkedList<>();
 
-        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : this.grafo.vertices.entrySet()) {
-            if(!visitados.containsKey(entry.getKey())) {
+        for (Integer entry : this.grafo.getVertices()) {
+            if(!visitados.containsKey(entry)) {
                 List<Integer> arbol = new ArrayList<>();
-                bfsForest(arbol, cola, visitados, entry.getKey());
+                bfsForest(arbol, cola, visitados, entry);
                 resultado.addAll(arbol);
             }
         }

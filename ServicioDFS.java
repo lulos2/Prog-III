@@ -6,11 +6,11 @@ import practico3.Vertice;
 
 import java.util.*;
 
-public class ServicioDFS<T> {
+public class ServicioDFS {
 
-    private GrafoDirigido<T> grafo;
+    private Grafo<?> grafo;
 
-    public ServicioDFS(GrafoDirigido<T> grafo) {
+    public ServicioDFS(Grafo<?> grafo) {
         this.grafo = grafo;
     }
 
@@ -18,10 +18,10 @@ public class ServicioDFS<T> {
     public List<Integer> dfsForest() {
         List<Integer> resultado = new ArrayList<>();
         HashMap<Integer,Boolean> visitados = new HashMap<>();
-        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : this.grafo.vertices.entrySet()) {
-            if(!visitados.containsKey(entry.getKey())) {
+        for (Integer entry : this.grafo.getVertices()) {
+            if(!visitados.containsKey(entry)) {
                 List<Integer> arbol = new ArrayList<>();
-                dfsForest(entry.getKey(), arbol, visitados);
+                dfsForest(entry, arbol, visitados);
                 resultado.addAll(arbol);
             }
         }
