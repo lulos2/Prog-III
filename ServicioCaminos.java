@@ -1,7 +1,7 @@
 package practicoEspecial;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServicioCaminos {
 
@@ -19,8 +19,36 @@ public class ServicioCaminos {
     }
 
     public List<List<Integer>> caminos() {
-        // Resolver Caminos
-        return new ArrayList<>();
+        List<Integer> caminoValido = new LinkedList<>();
+        List<List<Integer>> caminos = new ArrayList<>();
+        HashSet<Arco<?>> arcosVisitados = new HashSet<>();
+        encontrarCaminos(this.origen, this.lim, caminoValido, caminos, arcosVisitados);
+        return caminos;
     }
 
+    private void encontrarCaminos(Integer  verticeActual,
+                                  Integer limite,
+                                  List<Integer> caminoValido,
+                                  List<List<Integer>> caminos,
+                                  HashSet<Arco<?>> arcosVisitados) {
+        if(limite.equals(0)) return;
+        caminoValido.add(verticeActual);
+        if(this.destino == verticeActual && limite > 0) {
+            caminos.add(new ArrayList<>(caminoValido));
+        }
+        Iterator<? extends Arco<?>> arcos = this.grafo.obtenerArcos(verticeActual);
+        while (arcos.hasNext()) {
+            Arco arcoActual = arcos.next();
+            if(!arcosVisitados.contains(arcoActual)) {
+                arcosVisitados.add(arcoActual);
+                encontrarCaminos(arcoActual.getVerticeDestino(), limite-1, caminoValido, caminos, arcosVisitados);
+                caminoValido.remove(caminoValido.size() - 1);
+                limite++;
+            }
+        }
+    }
 }
+
+/*Caminos: dado un origen, un destino y un límite “lim” retorna todos los caminos que, partiendo del
+vértice origen, llega al vértice de destino sin pasar por más de “lim” arcos. Aclaración importante: en
+un camino no se puede pasar 2 veces por el mismo arco*/
