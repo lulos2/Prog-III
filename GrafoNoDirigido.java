@@ -1,7 +1,7 @@
 package practicoEspecial;
 
 
-import practico3.GrafoDirigido;
+import practicoEspecial.*;
 
 public class GrafoNoDirigido<T> extends GrafoDirigido<T> {
 

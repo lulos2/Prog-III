@@ -1,20 +1,19 @@
 package practicoEspecial;
 
-
-import practico3.Arco;
-import practico3.Grafo;
-
 import java.util.*;
 
 public class GrafoDirigido<T> implements Grafo<T> {
 
-    protected HashMap<Integer, LinkedList<Arco<T>>> vertices;
+    protected HashMap<Integer, LinkedList<Arco<? extends T>>> vertices;
 
     public GrafoDirigido() {
         this.vertices = new HashMap<>();
     }
 
-
+    @Override
+    public Set<Integer> getVertices(){
+        return this.vertices.keySet();
+    }
     @Override//agregarVertice(int verticeId): la complejidad temporal es O(1), ya que solo se agrega un nuevo elemento al mapa vertices.
     public void agregarVertice(int verticeId) {
         this.vertices.put(verticeId, new LinkedList<>());
@@ -22,8 +21,8 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//borrarVertice(int verticeId): la complejidad temporal es O(N^2), porque en el peor de los casos donde el grafo es pesado y cada uno de los N vertices tiene N aristas
     public void borrarVertice(int verticeId) {
-        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : vertices.entrySet()) {
-            for (Arco<T> adyasente : entry.getValue())
+        for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
+            for (Arco<? extends T> adyasente : entry.getValue())
                 if (existeArco(adyasente.getVerticeOrigen(), verticeId)) {
                     this.borrarArco(adyasente.getVerticeOrigen(), verticeId);
                 }
@@ -53,11 +52,11 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//obtenerArco(int verticeId1, int verticeId2): la complejidad temporal es O(N), donde N es el número de arcos en la lista de adyacencia correspondiente en el mapa vertices. Esto se debe a que se debe buscar el arco en la lista de adyacencia correspondiente en el mapa vertices.
     public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
-        LinkedList<Arco<T>> arcosDeV1 = vertices.get(verticeId1);
+        LinkedList<Arco<? extends T>> arcosDeV1 = vertices.get(verticeId1);
         if (arcosDeV1 != null) {
-            for (Arco<T> i : arcosDeV1) {
+            for (Arco<? extends T> i : arcosDeV1) {
                 if (i.getVerticeDestino() == verticeId2) {
-                    return i;
+                    return (Arco<T>) i;
                 }
             }
         }
@@ -73,7 +72,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
     @Override//cantidadArcos(): la complejidad temporal es O(N), donde N es el número de arcos en el grafo. Esto se debe a que se debe contar cada arco en cada lista de adyacencia en el mapa vertices.
     public int cantidadArcos() {
         int cantidad = 0;
-        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : vertices.entrySet()) {
+        for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
             cantidad += entry.getValue().size();
         }
         return cantidad;
@@ -86,9 +85,9 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//obtenerAdyacentes(int verticeId):O(m), donde m es el número de arcos que salen del vértice dado.
     public Iterator<Integer> obtenerAdyacentes(int verticeId) {
-        List<Arco<T>> arcos = vertices.get(verticeId);
+        List<Arco<? extends T>> arcos = vertices.get(verticeId);
         List<Integer> adyacentes = new ArrayList<>();
-        for (Arco<T> arco : arcos) {
+        for (Arco<? extends T> arco : arcos) {
             adyacentes.add(arco.getVerticeDestino());
         }
         return adyacentes.iterator();
@@ -96,16 +95,17 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//obtenerArcos(): O(m), donde m es el número total de arcos en el grafo.
     public Iterator<Arco<T>> obtenerArcos() {
-        LinkedList<Arco<T>> arcosResult = new LinkedList<>();
-        for (Map.Entry<Integer, LinkedList<Arco<T>>> entry : vertices.entrySet()) {
+        LinkedList<Arco<? extends T>> arcosResult = new LinkedList<>();
+        for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
             arcosResult.addAll(entry.getValue());
         }
-        return arcosResult.iterator();
+        return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosResult).iterator();
     }
 
     @Override//obtenerArcos(int verticeId): O(m), donde m es el número de arcos que salen del vértice dado.
     public Iterator<Arco<T>> obtenerArcos(int verticeId) {
-        LinkedList<Arco<T>> arcosVertice = new LinkedList<>(vertices.get(verticeId));
-        return arcosVertice.iterator();
+        LinkedList<Arco<? extends T>> arcosVertice = new LinkedList<>(vertices.get(verticeId));
+//        return arcosVertice.iterator();
+        return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosVertice).iterator();
     }
 }

@@ -1,8 +1,10 @@
 package practicoEspecial;
 
-import practico3.Arco;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 public interface Grafo<T> {
 
@@ -45,5 +47,5 @@ public interface Grafo<T> {
     // Obtiene un iterador que me permite recorrer todos los arcos que parten desde verticeId
     public Iterator<Arco<T>> obtenerArcos(int verticeId);
 
-
+    Set<Integer> getVertices();
 }
