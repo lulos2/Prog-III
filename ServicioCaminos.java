@@ -32,21 +32,22 @@ public class ServicioCaminos {
                                   List<Integer> caminoValido,
                                   List<List<Integer>> caminos,
                                   HashSet<Arco<?>> arcosVisitados) {
-        if(limite.equals(0)) return;
         caminoValido.add(verticeActual);
-        if(this.destino == verticeActual && limite > 0) {
+        if(limite.equals(-1)) return;
+        if(this.destino == verticeActual && limite >= 0) {
             caminos.add(new ArrayList<>(caminoValido));
         }
         Iterator<? extends Arco<?>> arcos = this.grafo.obtenerArcos(verticeActual);
         while (arcos.hasNext()) {
             Arco arcoActual = arcos.next();
+            limite--;
             if(!arcosVisitados.contains(arcoActual)) {
                 arcosVisitados.add(arcoActual);
-                encontrarCaminos(arcoActual.getVerticeDestino(), limite-1, caminoValido, caminos, arcosVisitados);
+                encontrarCaminos(arcoActual.getVerticeDestino(), limite, caminoValido, caminos, arcosVisitados);
+                limite++;
                 if(!caminoValido.isEmpty()) {
                     caminoValido.remove(caminoValido.size() - 1);
                 }
-                limite++;
                 arcosVisitados.remove(arcoActual);
             }
         }
