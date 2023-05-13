@@ -1,7 +1,6 @@
 package practicoEspecial;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServicioCaminos {
 
@@ -42,8 +41,11 @@ public class ServicioCaminos {
             if(!arcosVisitados.contains(arcoActual)) {
                 arcosVisitados.add(arcoActual);
                 encontrarCaminos(arcoActual.getVerticeDestino(), limite-1, caminoValido, caminos, arcosVisitados);
-                caminoValido.remove(caminoValido.size() - 1);
+                if(!caminoValido.isEmpty()) {
+                    caminoValido.remove(caminoValido.size() - 1);
+                }
                 limite++;
+                arcosVisitados.remove(arcoActual);
             }
         }
     }
