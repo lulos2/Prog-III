@@ -21,7 +21,9 @@ public class ServicioCaminos {
         List<Integer> caminoValido = new LinkedList<>();
         List<List<Integer>> caminos = new ArrayList<>();
         HashSet<Arco<?>> arcosVisitados = new HashSet<>();
-        encontrarCaminos(this.origen, this.lim, caminoValido, caminos, arcosVisitados);
+        if(this.grafo.contieneVertice(origen) && this.grafo.contieneVertice(destino)) {
+            encontrarCaminos(this.origen, this.lim, caminoValido, caminos, arcosVisitados);
+        }
         return caminos;
     }
 

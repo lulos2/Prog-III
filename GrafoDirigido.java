@@ -32,7 +32,9 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//agregarArco(int verticeId1, int verticeId2, T etiqueta): la complejidad temporal es O(1), ya que solo se agrega un nuevo elemento a la lista de adyacencia correspondiente en el mapa vertices.
     public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
-        vertices.get(verticeId1).add((new Arco<>(verticeId1, verticeId2, etiqueta)));
+        if(this.vertices.containsKey(verticeId1)&&this.vertices.containsKey(verticeId2)) {
+            vertices.get(verticeId1).add((new Arco<>(verticeId1, verticeId2, etiqueta)));
+        }
     }
 
     @Override//borrarArco(int verticeId1, int verticeId2): la complejidad temporal es O(N), donde N es el número de arcos en el grafo. Esto se debe a que se debe buscar el arco en la lista de adyacencia correspondiente en el mapa vertices.
