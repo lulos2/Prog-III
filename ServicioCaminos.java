@@ -17,8 +17,9 @@ public class ServicioCaminos {
         this.lim = lim;
     }
 
+    //O(n!), donde n es el número de arcos del grafo. Esto se debe a que el algoritmo explora todas las posibles combinaciones de arcos para encontrar los caminos entre el origen y el destino
     public List<List<Integer>> caminos() {
-        List<Integer> caminoValido = new LinkedList<>();
+        List<Integer> caminoValido = new ArrayList<>();
         List<List<Integer>> caminos = new ArrayList<>();
         HashSet<Arco<?>> arcosVisitados = new HashSet<>();
         if(this.grafo.contieneVertice(origen) && this.grafo.contieneVertice(destino)) {
@@ -27,27 +28,25 @@ public class ServicioCaminos {
         return caminos;
     }
 
-    private void encontrarCaminos(Integer  verticeActual,
+    private void encontrarCaminos(Integer  idVerticeActual,
                                   Integer limite,
                                   List<Integer> caminoValido,
                                   List<List<Integer>> caminos,
-                                  HashSet<Arco<?>> arcosVisitados) {
-        caminoValido.add(verticeActual);
+                                  HashSet<Arco<?>> arcosVisitados
+                                  )
+    {
+        caminoValido.add(idVerticeActual);
         if(limite.equals(-1)) return;
-        if(this.destino == verticeActual && limite >= 0) {
+        if(this.destino == idVerticeActual && limite >= 0) {
             caminos.add(new ArrayList<>(caminoValido));
         }
-        Iterator<? extends Arco<?>> arcos = this.grafo.obtenerArcos(verticeActual);
+        Iterator<? extends Arco<?>> arcos = this.grafo.obtenerArcos(idVerticeActual);
         while (arcos.hasNext()) {
-            Arco arcoActual = arcos.next();
-            limite--;
+            Arco<?> arcoActual = arcos.next();
             if(!arcosVisitados.contains(arcoActual)) {
                 arcosVisitados.add(arcoActual);
-                encontrarCaminos(arcoActual.getVerticeDestino(), limite, caminoValido, caminos, arcosVisitados);
-                limite++;
-                if(!caminoValido.isEmpty()) {
-                    caminoValido.remove(caminoValido.size() - 1);
-                }
+                encontrarCaminos(arcoActual.getVerticeDestino(), limite-1, caminoValido, caminos, arcosVisitados);
+                caminoValido.remove(caminoValido.size() - 1);
                 arcosVisitados.remove(arcoActual);
             }
         }
