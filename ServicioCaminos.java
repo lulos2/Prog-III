@@ -19,7 +19,7 @@ public class ServicioCaminos {
 
     //O(n!), donde n es el número de arcos del grafo. Esto se debe a que el algoritmo explora todas las posibles combinaciones de arcos para encontrar los caminos entre el origen y el destino
     public List<List<Integer>> caminos() {
-        List<Integer> caminoValido = new ArrayList<>();
+        List<Integer> caminoValido = new LinkedList<>();
         List<List<Integer>> caminos = new ArrayList<>();
         HashSet<Arco<?>> arcosVisitados = new HashSet<>();
         if(this.grafo.contieneVertice(origen) && this.grafo.contieneVertice(destino)) {

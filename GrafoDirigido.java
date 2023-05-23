@@ -110,4 +110,15 @@ public class GrafoDirigido<T> implements Grafo<T> {
 //        return arcosVertice.iterator();
         return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosVertice).iterator();
     }
+
+    @Override//metodo utilizado para testeos de eficiencia temporal
+    public void hacerPesado() {
+        for (Integer i : vertices.keySet()){
+            for (Integer j : vertices.keySet()){
+                if (!existeArco(j,i)){
+                    this.agregarArco(j,i,(T)"pepe");
+                }
+            }
+        }
+    }
 }

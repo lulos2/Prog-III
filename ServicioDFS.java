@@ -1,9 +1,6 @@
 package practicoEspecial;
 
 
-import practico3.Arco;
-import practico3.Vertice;
-
 import java.util.*;
 
 public class ServicioDFS {

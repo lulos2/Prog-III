@@ -1,6 +1,5 @@
 package practicoEspecial;
 
-import practico3.Arco;
 
 import java.util.*;
 

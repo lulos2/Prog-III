@@ -48,4 +48,6 @@ public interface Grafo<T> {
     public Iterator<Arco<T>> obtenerArcos(int verticeId);
 
     Set<Integer> getVertices();
+
+    public void hacerPesado();
 }
