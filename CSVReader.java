@@ -1,6 +1,6 @@
 package practicoEspecialP2;
 
-import practicoEspecial.Grafo;
+import practicoEspecial.Arco;
 import practicoEspecial.GrafoNoDirigido;
 
 import java.io.BufferedReader;
@@ -63,5 +63,6 @@ public class CSVReader {
     public GrafoNoDirigido getStations() {
         return this.stations;
     }
+
 
 }

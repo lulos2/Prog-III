@@ -11,7 +11,8 @@ public class Main {
         reader.read();
 
         ShortNetBacktracking backtracking = new ShortNetBacktracking(reader);
-        System.out.println(backtracking.getShortestNet());
+        System.out.println(reader.getStations());
+        System.out.println(backtracking.findMinimumCoverTree());
         System.out.println(backtracking.getMinimunDistanceForConectEveryStations());
     }
 

@@ -2,8 +2,8 @@ package practicoEspecialP2.services;
 
 import practicoEspecial.Arco;
 import practicoEspecial.Grafo;
-import practicoEspecial.GrafoNoDirigido;
 import practicoEspecialP2.CSVReader;
+import practicoEspecialP2.Tunnel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,52 +15,86 @@ public class ShortNetBacktracking {
     protected Grafo<?> stations;
     protected Integer minimunDistanceForConectEveryStations;
 
+    protected List<Arco<?>> minimumCoverTree;
+
     public ShortNetBacktracking(CSVReader csvReader) {
         this.stations = csvReader.getStations();
-    }
-    public List<List<Integer>> getShortestNet() {
-        List<List<Integer>> result = new ArrayList<>();
-        List<Integer> partialResult = new ArrayList<>();
-        HashSet<Arco<?>> visitedArchs = new HashSet<>();
-        HashSet<Integer> visitedVector = new HashSet<>();
-        minimunDistanceForConectEveryStations = Integer.MAX_VALUE;
-        for(Integer station: this.stations.getVertices()){
-            searchShortPath(station, visitedArchs, visitedVector, 0, result, partialResult);
-        }
-        return result;
+        this.minimumCoverTree = new ArrayList<>();
     }
 
-    private void searchShortPath(Integer actualStation, HashSet<Arco<?>> visitedArch, HashSet<Integer> visitedStations, Integer actualDistance, List<List<Integer>> result, List<Integer> partialResult) {
-        if(minimunDistanceForConectEveryStations < actualDistance)return;
+    public String findMinimumCoverTree() {
+        this.minimumCoverTree.clear();
+        List<Arco<?>> currentPath = new ArrayList<>();
+        HashSet<Arco<?>> visitedEdges = new HashSet<>();
+        HashSet<Integer> visitedStations = new HashSet<>();
+        this.minimunDistanceForConectEveryStations = Integer.MAX_VALUE;
+
+        for (Integer station: this.stations.getVertices()){
+            findMinimumCoverTree(minimumCoverTree, currentPath, station, 0, visitedStations, visitedEdges);
+        }
+        return this.minimumCoverTree.toString();
+    }
+
+    private void findMinimumCoverTree(List<Arco<?>> minimumCoverTree,
+                                      List<Arco<?>> currentPath,
+                                      Integer actualStation,
+                                      Integer currentLength,
+                                      HashSet<Integer> visitedStations,
+                                      HashSet<Arco<?>> visitedEdges) {
         if(!visitedStations.contains(actualStation)) {
             visitedStations.add(actualStation);
         }
 
-        Iterator<? extends Arco<?>> arches = this.stations.obtenerArcos(actualStation);
+        Iterator<? extends Arco<?>> it = this.stations.obtenerArcos();
 
-        while (arches.hasNext()) {
-            Arco actualArch = arches.next();
-            if(!visitedArch.contains(actualArch)){
-                visitedArch.add(actualArch);
-                partialResult.add(actualArch.getVerticeOrigen());
-                partialResult.add(actualArch.getVerticeDestino());
-                actualDistance = (actualDistance + (Integer)actualArch.getEtiqueta());
-                if(visitedStations.size() == this.stations.cantidadVertices()){
-                    if(minimunDistanceForConectEveryStations > actualDistance) {
-                        minimunDistanceForConectEveryStations = actualDistance;
-                        result.add(new ArrayList<>(partialResult));
+        while (it.hasNext()){
+            Arco<?> actualEdge = it.next();
+
+            if (!visitedEdges.contains(actualEdge)) {
+                visitedEdges.add(actualEdge);
+                if (!currentPath.contains(actualEdge)) {
+                    currentLength = currentLength + (Integer) actualEdge.getEtiqueta();
+                    currentPath.add(actualEdge);
+                }
+                if (visitedStations.size() == this.stations.cantidadVertices()) {
+                    if (currentLength < minimunDistanceForConectEveryStations) {
+                        this.minimunDistanceForConectEveryStations = currentLength;
+                        this.minimumCoverTree.clear();
+                        this.minimumCoverTree.addAll(currentPath);
                     }
                 }
-                searchShortPath(actualArch.getVerticeDestino(), visitedArch, visitedStations, actualDistance, result, partialResult);
-                if(!partialResult.isEmpty()) {
-                    partialResult.remove(partialResult.size() - 1);
-                    partialResult.remove(partialResult.size() - 1);
-                }
-                visitedArch.remove(actualArch);
-                actualDistance = (actualDistance - (Integer)actualArch.getEtiqueta());
+                findMinimumCoverTree(minimumCoverTree, currentPath, actualEdge.getVerticeDestino(), currentLength, visitedStations, visitedEdges);
+                visitedStations.remove(actualEdge.getVerticeDestino());
+                visitedEdges.remove(actualEdge);
+                currentPath.remove(actualEdge);
+                currentLength = currentLength - (Integer) actualEdge.getEtiqueta();
             }
         }
+    }
 
+    /*Tunnel<?> actualTunnel = (Tunnel<?>) it.next();*/
+
+
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (Arco<?> arco : minimumCoverTree) {
+            sb.append("E");
+            sb.append(arco.getVerticeOrigen());
+            sb.append("-");
+            sb.append(arco.getVerticeDestino());
+            sb.append(", ");
+        }
+        if (!minimumCoverTree.isEmpty()) {
+            sb.setLength(sb.length() - 2); // Eliminar la coma y el espacio extra al final
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    public String getMinimumCoverTree(){
+        return this.minimumCoverTree.toString();
     }
     public Integer getMinimunDistanceForConectEveryStations(){
         return this.minimunDistanceForConectEveryStations;
