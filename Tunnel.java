@@ -22,4 +22,9 @@ public class Tunnel<T> extends Arco<T>{
                 || (this.verticeOrigen == other.verticeDestino && this.verticeDestino == other.verticeOrigen);
     }
 
+    @Override
+    public String toString() {
+        return "E" + verticeOrigen + "-" + "E" + verticeDestino;
+    }
+
 }

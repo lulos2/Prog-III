@@ -2,6 +2,8 @@ package practicoEspecialP2;
 
 import practicoEspecialP2.services.ShortNetBacktracking;
 
+import java.io.Reader;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -10,10 +12,11 @@ public class Main {
         CSVReader reader = new CSVReader(path);
         reader.read();
 
+
         ShortNetBacktracking backtracking = new ShortNetBacktracking(reader);
-        System.out.println(reader.getStations());
         System.out.println(backtracking.findMinimumCoverTree());
         System.out.println(backtracking.getMinimunDistanceForConectEveryStations());
+        System.out.println(backtracking.getIterations());
     }
 
 }
