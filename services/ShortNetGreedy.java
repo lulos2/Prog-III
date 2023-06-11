@@ -1,4 +1,2 @@
-package practicoEspecialP2.services;
-
-public class ShortNetGreedy {
+package practicoEspecialP2.services;public class ShortNetGreedy {
 }
