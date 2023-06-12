@@ -3,7 +3,7 @@ package practicoEspecialP2.services;
 import practicoEspecial.Arco;
 import practicoEspecial.Grafo;
 import practicoEspecialP2.CSVReader;
-import practicoEspecialP2.Tunnel;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,7 +45,7 @@ public class ShortNetBacktracking {
         this.iterations++;
         Iterator<? extends Arco<?>> it = this.stations.obtenerArcos(actualStation);
 
-        while (it.hasNext()){
+        while (it.hasNext()) {
             Arco<?> actualTunnel =  it.next();
             visitedStations.add(actualStation);
             if (!visitedEdges.contains(actualTunnel)) {
@@ -54,7 +54,7 @@ public class ShortNetBacktracking {
                     currentLength = currentLength + (Integer) actualTunnel.getEtiqueta();
                     currentPath.add(actualTunnel);
                 }
-                if (visitedStations.containsAll(this.stations.getVertices())) {
+                if (visitedStations.size() == this.stations.getVertices().size()) {
                     if (currentLength < minimunDistanceForConectEveryStations) {
                         this.minimunDistanceForConectEveryStations = currentLength;
                         this.minimumCoverTree.clear();
@@ -66,18 +66,15 @@ public class ShortNetBacktracking {
                 currentLength = (currentLength - (Integer) actualTunnel.getEtiqueta());
                 visitedEdges.remove(actualTunnel);
                 visitedStations.remove(actualStation);
-                /*if(currentLength > this.minimunDistanceForConectEveryStations)return;*/
+                if(currentLength > this.minimunDistanceForConectEveryStations)return;
             }
         }
     }
 
-
-
-
     public String getMinimumCoverTree(){
         return this.minimumCoverTree.toString();
     }
-    public String getMinimunDistanceForConectEveryStations(){
+    public String getMinimumDistanceForConnectEveryStations(){
         StringBuilder sb = new StringBuilder();
         sb.append(this.minimunDistanceForConectEveryStations);
         sb.append("km");
