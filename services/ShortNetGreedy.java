@@ -30,15 +30,15 @@ public class ShortNetGreedy {
             int pos = 0;
             Integer current = iterator.next();
             visitedStations.add(current);
-            Arco<?> bestTunnel = select(current,pos);
-            while (this.minimumCoverTree.contains(bestTunnel)) {
+            if(this.stations.getVertices().size() == visitedStations.size())break;
+            Arco<?> bestTunnel = select(current, pos);
+
+            while (this.minimumCoverTree.contains(bestTunnel)||visitedStations.contains(bestTunnel.getVerticeDestino())) {
                 pos++;
                 bestTunnel = select(current, pos);
             }
-            if(this.stations.getVertices().size() > visitedStations.size()) {
-                this.minimumCoverTree.add(bestTunnel);
-                this.minimunDistanceForConectEveryStations += (Integer) bestTunnel.getEtiqueta();
-            }
+            this.minimumCoverTree.add(bestTunnel);
+            this.minimunDistanceForConectEveryStations += (Integer) bestTunnel.getEtiqueta();
         }
         return ("Greedy:\n" + this.minimumCoverTree.toString());
     }
