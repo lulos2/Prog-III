@@ -27,8 +27,8 @@ public class ShortNetBacktracking {
         this.minimumCoverTree.clear();
         this.iterations = 0;
         this.minimunDistanceForConectEveryStations = Integer.MAX_VALUE;
-        List<Arco<?>> currentPath = new ArrayList<>();
-        HashSet<Arco<?>> visitedEdges = new HashSet<>();
+        List<Arco<?>> visitedEdges = new ArrayList<>();
+        HashSet<Arco<?>> currentPath = new HashSet<>();
         HashSet<Integer> visitedStations = new HashSet<>();
 
         for (Integer station: this.stations.getVertices()){
@@ -37,13 +37,12 @@ public class ShortNetBacktracking {
         return ("Backtracking: \n" + this.minimumCoverTree.toString());
     }
 
-    private void findMinimumCoverTree(List<Arco<?>> currentPath,
+    private void findMinimumCoverTree(HashSet<Arco<?>> currentPath,
                                       Integer actualStation,
                                       Integer currentLength,
                                       HashSet<Integer> visitedStations,
-                                      HashSet<Arco<?>> visitedEdges) {
-        this.iterations++;
-
+                                      List<Arco<?>> visitedEdges) {
+        visitedStations.add(actualStation);
         if (visitedStations.size() == this.stations.getVertices().size()) {
             if (currentLength < minimunDistanceForConectEveryStations) {
                 this.minimunDistanceForConectEveryStations = currentLength;
@@ -52,6 +51,7 @@ public class ShortNetBacktracking {
             }
             return;
         }
+
         Iterator<? extends Arco<?>> it = this.stations.obtenerArcos(actualStation);
 
         while (it.hasNext()) {
@@ -60,12 +60,12 @@ public class ShortNetBacktracking {
             if (!visitedEdges.contains(actualTunnel)) {
                 visitedEdges.add(actualTunnel);
                 if (!currentPath.contains(actualTunnel)) {
-                    currentLength = currentLength + (Integer) actualTunnel.getEtiqueta();
+                    currentLength += (Integer) actualTunnel.getEtiqueta();
                     currentPath.add(actualTunnel);
                 }
                 findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedStations, visitedEdges);
                 currentPath.remove(actualTunnel);
-                currentLength = (currentLength - (Integer) actualTunnel.getEtiqueta());
+                currentLength -= (Integer) actualTunnel.getEtiqueta();
                 visitedEdges.remove(actualTunnel);
                 visitedStations.remove(actualStation);
                 if(currentLength > this.minimunDistanceForConectEveryStations)return;
