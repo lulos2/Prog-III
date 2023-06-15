@@ -50,7 +50,7 @@ public class ShortNetBacktracking {
             return;
         }
         visitedStations.add(actualStation);
-
+        this.iterations++;
         Iterator<? extends Arco<?>> it = this.stations.obtenerArcos(actualStation);
 
         while (it.hasNext()) {
