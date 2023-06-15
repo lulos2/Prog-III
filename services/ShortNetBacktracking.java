@@ -42,7 +42,7 @@ public class ShortNetBacktracking {
                                       Integer currentLength,
                                       HashSet<Integer> visitedStations,
                                       List<Arco<?>> visitedEdges) {
-        if (currentLength >= minimunDistanceForConectEveryStations)return;
+        if (currentLength >= minimunDistanceForConectEveryStations) return;
         if (visitedStations.size() == this.stations.getVertices().size()) {
             this.minimunDistanceForConectEveryStations = currentLength;
             this.minimumCoverTree.clear();
@@ -59,21 +59,25 @@ public class ShortNetBacktracking {
             int destination = actualTunnel.getVerticeDestino();
             int distance = (int) actualTunnel.getEtiqueta();
 
-            if (!visitedStations.contains(source) && visitedStations.contains(destination)) {
+            if (visitedStations.contains(source) && visitedStations.contains(destination)) continue;
+
+            if (!visitedStations.contains(source)) {
                 visitedStations.add(source);
                 currentPath.add(actualTunnel);
                 currentLength += distance;
-                findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedStations, visitedEdges);
+                findMinimumCoverTree(currentPath, actualTunnel.getVerticeOrigen(), currentLength, visitedStations, visitedEdges);
                 currentLength -= distance;
                 currentPath.remove(actualTunnel);
+                visitedStations.remove(destination);
                 visitedStations.remove(source);
-            } else if (visitedStations.contains(source) && !visitedStations.contains(destination)) {
+            } else if (!visitedStations.contains(destination)) {
                 visitedStations.add(destination);
                 currentPath.add(actualTunnel);
                 currentLength += distance;
                 findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedStations, visitedEdges);
                 currentLength -= distance;
                 visitedStations.remove(destination);
+                visitedStations.remove(source);
                 currentPath.remove(actualTunnel);
             }
         }
