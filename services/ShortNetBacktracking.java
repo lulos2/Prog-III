@@ -73,14 +73,10 @@ public class ShortNetBacktracking {
         }
     }
 
-    public String getMinimumCoverTree(){
-        return this.minimumCoverTree.toString();
-    }
+
     public String getMinimumDistanceForConnectEveryStations(){
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.minimunDistanceForConectEveryStations);
-        sb.append("km");
-        return sb.toString();
+        return this.minimunDistanceForConectEveryStations +
+                "km";
     }
     public int getIterations(){
         return this.iterations;
