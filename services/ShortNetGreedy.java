@@ -47,10 +47,8 @@ public class ShortNetGreedy {
        return this.stations.getOrderEdges(v).get(pos);
     }
     public String getMinimumDistanceForConnectEveryStations(){
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.minimunDistanceForConectEveryStations);
-        sb.append("km");
-        return sb.toString();
+        return this.minimunDistanceForConectEveryStations +
+                " km";
     }
     public int getIterations(){
         return this.iterations;
