@@ -41,6 +41,6 @@ public class Main {
         long endTimeKruskal = System.nanoTime();
         long totalTimeKruskal = endTimeKruskal - startTimeKruskal;
         System.out.println("Tiempo de ejecución Kruskal : " + totalTimeKruskal + " nanosegundos");
-    }
+   }
 
 }
