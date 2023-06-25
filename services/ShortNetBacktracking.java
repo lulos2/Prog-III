@@ -38,17 +38,17 @@ public class ShortNetBacktracking {
                                       Integer actualStation,
                                       Integer currentLength,
                                       ArrayList<Arco<?>> visitedEdges,
-                                      HashSet<Integer> visitedStations) {
+                                      HashSet<Integer> visitedStations)
+    {
         this.iterations++;
-        visitedStations.add(actualStation);
         if (currentLength >= this.minimunDistanceForConectEveryStations) return;
+        visitedStations.add(actualStation);
         if (allStationsVisited(currentPath) && currentPath.size() >= this.stations.getVertices().size()-1) {
             this.minimunDistanceForConectEveryStations = currentLength;
             this.minimumCoverTree.clear();
             this.minimumCoverTree.addAll(currentPath);
             return;
         }
-
 
         Iterator<? extends Arco<?>> it = this.stations.obtenerArcos(actualStation);
 
@@ -57,10 +57,12 @@ public class ShortNetBacktracking {
 
             if (!visitedEdges.contains(actualTunnel)) {
                 visitedEdges.add(actualTunnel);
-                if (!currentPath.contains(actualTunnel) && !currentPath.contains(actualTunnel.reverse())) {
+                if (!currentPath.contains(actualTunnel)) {
                     currentPath.add(actualTunnel);
                     currentLength += (Integer) actualTunnel.getEtiqueta();
-                    findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedEdges, visitedStations);
+                    if (currentLength < this.minimunDistanceForConectEveryStations) {
+                        findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedEdges, visitedStations);
+                    }
                     currentPath.remove(actualTunnel);
                     currentLength -= (Integer) actualTunnel.getEtiqueta();
                 }
