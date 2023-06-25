@@ -5,10 +5,7 @@ import practicoEspecial.Grafo;
 import practicoEspecialP2.CSVReader;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ShortNetBacktracking {
 
@@ -27,49 +24,67 @@ public class ShortNetBacktracking {
         this.minimumCoverTree.clear();
         this.iterations = 0;
         this.minimunDistanceForConectEveryStations = Integer.MAX_VALUE;
-        HashSet<Arco<?>> currentPath = new HashSet<>();
-        ArrayList<Integer> visitedStations = new ArrayList<>();
+        List<Arco<?>> currentPath = new ArrayList<>();
+        ArrayList<Arco<?>> visitedEdges = new ArrayList<>();
 
         for (Integer station: this.stations.getVertices()){
-            findMinimumCoverTree(currentPath, station, 0, visitedStations);
+            findMinimumCoverTree(currentPath, station, 0, visitedEdges);
         }
         return ("Backtracking: \n" + this.minimumCoverTree.toString());
     }
 
-    private void findMinimumCoverTree(HashSet<Arco<?>> currentPath,
+    private void findMinimumCoverTree(List<Arco<?>> currentPath,
                                       Integer actualStation,
                                       Integer currentLength,
-                                      ArrayList<Integer> visitedStations) {
-        if (currentLength >= minimunDistanceForConectEveryStations) return;
-        if (visitedStations.size() == this.stations.getVertices().size()) {
-            this.minimunDistanceForConectEveryStations = currentLength;
-            this.minimumCoverTree.clear();
-            this.minimumCoverTree.addAll(currentPath);
+                                      ArrayList<Arco<?>> visitedEdges) {
+        this.iterations++;
+        if(currentLength > this.minimunDistanceForConectEveryStations){
             return;
         }
-        visitedStations.add(actualStation);
+
+        if (allStationsVisited(visitedEdges)) {
+            visitedEdges.forEach(System.out::print);
+            System.out.print("\n");
+            if (currentLength < minimunDistanceForConectEveryStations) {
+                this.minimunDistanceForConectEveryStations = currentLength;
+                this.minimumCoverTree.clear();
+                this.minimumCoverTree.addAll(currentPath);
+            }
+            return;
+        }
 
         Iterator<? extends Arco<?>> it = this.stations.obtenerArcos(actualStation);
 
-        while (it.hasNext()) {
-            Arco<?> actualTunnel = it.next();
-            int source = actualTunnel.getVerticeOrigen();
-            int destination = actualTunnel.getVerticeDestino();
-            int distance = (int) actualTunnel.getEtiqueta();
+        while (it.hasNext()){
+            Arco<?> actualTunnel =  it.next();
 
-            if (visitedStations.contains(source) && visitedStations.contains(destination)) {
-                continue;
+            if (!visitedEdges.contains(actualTunnel)) {
+                visitedEdges.add(actualTunnel);
+                if (!currentPath.contains(actualTunnel)) {
+                    currentLength = currentLength + (Integer) actualTunnel.getEtiqueta();
+                    currentPath.add(actualTunnel);
+                }
+                findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedEdges);
+                currentPath.remove(actualTunnel);
+                currentLength = (currentLength - (Integer) actualTunnel.getEtiqueta());
+                visitedEdges.remove(actualTunnel);
             }
-
-            visitedStations.add(source);
-            currentPath.add(actualTunnel);
-            currentLength += distance;
-            findMinimumCoverTree(currentPath, actualTunnel.getVerticeOrigen(), currentLength, visitedStations);
-            currentLength -= distance;
-            currentPath.remove(actualTunnel);
-            visitedStations.remove(source);
         }
     }
+
+    private boolean allStationsVisited(ArrayList<Arco<?>> visitedEdges){
+        HashMap<Integer, Boolean> visited = new HashMap<>();
+        for (Integer station: this.stations.getVertices()){
+            visited.put(station, false);
+        }
+        for (Arco<?> a: visitedEdges){
+            visited.put(a.getVerticeOrigen(), true);
+            visited.put(a.getVerticeDestino(), true);
+        }
+        return visited.values().stream().allMatch(x -> x);
+    }
+
+
 
     public String getMinimumDistanceForConnectEveryStations(){
         return this.minimunDistanceForConectEveryStations +
