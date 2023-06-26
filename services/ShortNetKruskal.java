@@ -6,14 +6,15 @@ import practicoEspecialP2.CSVReader;
 
 import java.util.*;
 
-public class ShortNetKruskal {
+
+public class ShortNetKruskalBacktracking {
 
     protected Grafo<?> stations;
     protected HashSet<Arco<?>> minimumCoverTree;
     protected Integer minimunDistanceForConectEveryStations;
     private int iterations;
 
-    public ShortNetKruskal(CSVReader reader){
+    public ShortNetKruskalBacktracking(CSVReader reader) {
         this.stations = reader.getStations();
         this.minimumCoverTree = new HashSet<>();
         minimunDistanceForConectEveryStations = Integer.MAX_VALUE;
@@ -32,18 +33,62 @@ public class ShortNetKruskal {
             }
         }
         Collections.sort(allEdges, Comparator.comparingInt(edge -> (Integer) edge.getEtiqueta()));
+
+        boolean[] visited = new boolean[stations.getVertices().size() + 1];
+        backtrack(allEdges, visited, 0);
+
+        return ("Kruskal (Backtracking): \n" + minimumCoverTree.toString());
+    }
+
+    private void backtrack(List<Arco<?>> allEdges, boolean[] visited, int currentIndex) {
+        if (currentIndex == allEdges.size()) {
+            return;
+        }
+
+        Arco<?> currentEdge = allEdges.get(currentIndex);
+        int source = currentEdge.getVerticeOrigen();
+        int destination = currentEdge.getVerticeDestino();
+        this.iterations++;
+
+        visited[currentIndex] = true;
+        if (isConnected(visited)) {
+            minimumCoverTree.add(currentEdge);
+            minimunDistanceForConectEveryStations += (Integer) currentEdge.getEtiqueta();
+        }
+
+        backtrack(allEdges, visited, currentIndex + 1);
+
+        visited[currentIndex] = false;
+        backtrack(allEdges, visited, currentIndex + 1);
+    }
+
+    private boolean isConnected(boolean[] visited) {
         DisjointSet disjointSet = new DisjointSet(stations.getVertices().size());
-        for (Arco<?> edge : allEdges) {
-            int source = edge.getVerticeOrigen();
-            int destination = edge.getVerticeDestino();
-            this.iterations++;
-            if (disjointSet.find(source) != disjointSet.find(destination)) {
-                disjointSet.union(source, destination);
-                minimumCoverTree.add(edge);
-                minimunDistanceForConectEveryStations += (Integer) edge.getEtiqueta();
+
+        for (int i = 0; i < visited.length; i++) {
+            if (visited[i]) {
+                Arco<?> edge = allEdges.get(i);
+                int source = edge.getVerticeOrigen();
+                int destination = edge.getVerticeDestino();
+
+                if (disjointSet.find(source) != disjointSet.find(destination)) {
+                    disjointSet.union(source, destination);
+                }
             }
         }
-        return ("Kruskal: \n"+minimumCoverTree.toString());
+
+        int representative = -1;
+        for (int i = 1; i <= stations.getVertices().size(); i++) {
+            if (visited[i]) {
+                if (representative == -1) {
+                    representative = disjointSet.find(i);
+                } else if (representative != disjointSet.find(i)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private static class DisjointSet {
@@ -81,6 +126,8 @@ public class ShortNetKruskal {
             }
         }
     }
+}
+
 
     public String getMinimumDistanceForConnectEveryStations(){
         return this.minimunDistanceForConectEveryStations +
