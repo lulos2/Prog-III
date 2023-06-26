@@ -26,8 +26,8 @@ public class GrafoDirigido<T> implements Grafo<T> {
     @Override//borrarVertice(int verticeId): la complejidad temporal es O(N^2), porque en el peor de los casos donde el grafo es pesado y cada uno de los N vertices tiene N aristas
     public void borrarVertice(int verticeId) {
         for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
-            for (Arco<? extends T> adyasente : entry.getValue()) {
-                this.borrarArco(adyasente.getVerticeOrigen(), verticeId);
+            if (entry.getValue().removeIf(x -> x.getVerticeDestino() == verticeId)) {
+                cantArcos --;
             }
         }
         if(vertices.containsKey(verticeId)) {
