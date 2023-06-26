@@ -5,9 +5,11 @@ import java.util.*;
 public class GrafoDirigido<T> implements Grafo<T> {
 
     protected HashMap<Integer, LinkedList<Arco<? extends T>>> vertices;
+    protected Integer cantArcos;
 
     public GrafoDirigido() {
         this.vertices = new HashMap<>();
+        cantArcos = 0;
     }
 
     @Override
@@ -16,16 +18,20 @@ public class GrafoDirigido<T> implements Grafo<T> {
     }
     @Override//agregarVertice(int verticeId): la complejidad temporal es O(1), ya que solo se agrega un nuevo elemento al mapa vertices.
     public void agregarVertice(int verticeId) {
-        this.vertices.put(verticeId, new LinkedList<>());
+        if (!this.vertices.containsKey(verticeId)) {
+            this.vertices.put(verticeId, new LinkedList<>());
+        }
     }
 
     @Override//borrarVertice(int verticeId): la complejidad temporal es O(N^2), porque en el peor de los casos donde el grafo es pesado y cada uno de los N vertices tiene N aristas
     public void borrarVertice(int verticeId) {
         for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
-            for (Arco<? extends T> adyasente : entry.getValue())
-                if (existeArco(adyasente.getVerticeOrigen(), verticeId)) {
-                    this.borrarArco(adyasente.getVerticeOrigen(), verticeId);
-                }
+            for (Arco<? extends T> adyasente : entry.getValue()) {
+                this.borrarArco(adyasente.getVerticeOrigen(), verticeId);
+            }
+        }
+        if(vertices.containsKey(verticeId)) {
+            cantArcos -= vertices.get(verticeId).size();
         }
         vertices.remove(verticeId);
     }
@@ -33,13 +39,20 @@ public class GrafoDirigido<T> implements Grafo<T> {
     @Override//agregarArco(int verticeId1, int verticeId2, T etiqueta): la complejidad temporal es O(1), ya que solo se agrega un nuevo elemento a la lista de adyacencia correspondiente en el mapa vertices.
     public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
         if(this.vertices.containsKey(verticeId1)&&this.vertices.containsKey(verticeId2)) {
-            vertices.get(verticeId1).add((new Arco<>(verticeId1, verticeId2, etiqueta)));
+            if(!this.existeArco(verticeId1,verticeId2)) {
+                vertices.get(verticeId1).add((new Arco<>(verticeId1, verticeId2, etiqueta)));
+                cantArcos++;
+            }
         }
     }
 
     @Override//borrarArco(int verticeId1, int verticeId2): la complejidad temporal es O(N), donde N es el número de arcos en el grafo. Esto se debe a que se debe buscar el arco en la lista de adyacencia correspondiente en el mapa vertices.
     public void borrarArco(int verticeId1, int verticeId2) {
-        vertices.get(verticeId1).remove(obtenerArco(verticeId1, verticeId2));
+        if(this.vertices.containsKey(verticeId1)) {
+           if (vertices.get(verticeId1).removeIf(x -> x.getVerticeDestino() == verticeId2)) {
+               cantArcos--;
+           }
+        }
     }
 
     @Override//contieneVertice(int verticeId): la complejidad temporal es O(1), ya que se usa el método containsKey() en el mapa vertices.
@@ -73,11 +86,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//cantidadArcos(): la complejidad temporal es O(N), donde N es el número de arcos en el grafo. Esto se debe a que se debe contar cada arco en cada lista de adyacencia en el mapa vertices.
     public int cantidadArcos() {
-        int cantidad = 0;
-        for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
-            cantidad += entry.getValue().size();
-        }
-        return cantidad;
+        return cantArcos;
     }
 
     @Override//obtenerVertices(): la complejidad temporal es O(N), donde N es el número de vértices en el grafo. Esto se debe a que se debe iterar por cada entrada en el mapa vertices y devolver la clave correspondiente.
@@ -107,9 +116,9 @@ public class GrafoDirigido<T> implements Grafo<T> {
     @Override//obtenerArcos(int verticeId): O(m), donde m es el número de arcos que salen del vértice dado.
     public Iterator<Arco<T>> obtenerArcos(int verticeId) {
         LinkedList<Arco<? extends T>> arcosVertice = new LinkedList<>(vertices.get(verticeId));
-//        return arcosVertice.iterator();
         return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosVertice).iterator();
     }
+
 
     @Override//metodo utilizado para testeos de eficiencia temporal
     public void hacerPesado() {
@@ -121,4 +130,52 @@ public class GrafoDirigido<T> implements Grafo<T> {
             }
         }
     }
+    @Override
+    public ArrayList<Arco<T>> getOrderEdges(Integer vertice) {
+        Integer minValue = Integer.MAX_VALUE;
+        Iterator<Arco<T>> edges = obtenerArcos(vertice);
+        ArrayList<Arco<T>> result = new ArrayList<>();
+        Arco<T> minEdge = new Arco<>(0,0,(T)"pa");
+        while (edges.hasNext()) {
+            Arco<T> actualEdge = edges.next();
+            result.add(actualEdge);
+        }
+        Collections.sort(result,comparador);
+        return result;
+    }
+    Comparator<Arco<?>> comparador = new Comparator<Arco<?>>() {
+        @Override
+        public int compare(Arco<?> arco1, Arco<?> arco2) {
+            Integer etiqueta1 = (Integer) arco1.getEtiqueta();
+            Integer etiqueta2 = (Integer) arco2.getEtiqueta();
+            return etiqueta1.compareTo(etiqueta2);
+        }
+    };
+    public ArrayList<Arco<T>> getAllEdges(){
+        ArrayList<Arco<T>> arcos = new ArrayList<>();
+        for (Iterator<? extends Arco<T>> it = obtenerArcos(); it.hasNext(); ) {
+            arcos.add(it.next());
+        }
+        return arcos;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(Integer i : this.vertices.keySet()){
+            sb.append(i);
+            sb.append("-");
+        }
+        sb.setLength(sb.length() - 1);
+        sb.append("]");
+        return sb.toString();
+    }
 }
+/*TODO funcionamiento:
+-       ?  Al borrar un vertice que tiene arcos entrantes tira excepción.
+ DONE   - El agregarArco no está chequeando que el arco no exista previamente, por lo que se permite crear arcos duplicados.
+ DONE   - El borrarArco primero busca el arco, y despues lo borra (doble recorrido). Se podría usar el metodo ""removeIf"" de List para evitar el doble recorrido."
+  TODO implementacion:
+"-DONE    La cantidad de arcos la calculan cada vez que se las piden. Se podría haber llevado pre-calculada en una variable (tal y como hicieron con el size en la Lista vinculada que implementaron en el TP1.
+     ?  - La complejidad del obtenerAdyacentes podría haberse reducido facilmente a O(1) implementando un Iterator<Integer> que encapsulara al Iterator<Arco>."
+*/

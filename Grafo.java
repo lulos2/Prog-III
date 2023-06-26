@@ -1,9 +1,7 @@
-package practicoEspecial;
+package practicoEspecialP2;
 
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 public interface Grafo<T> {
