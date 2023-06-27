@@ -1,4 +1,4 @@
-package practicoEspecialP2;
+package practicoEspecial;
 
 
 public class GrafoNoDirigido<T> extends GrafoDirigido<T> {

@@ -172,7 +172,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
     }
 }
 /*TODO funcionamiento:
--       ?  Al borrar un vertice que tiene arcos entrantes tira excepción.
+-DONE     Al borrar un vertice que tiene arcos entrantes tira excepción.
  DONE   - El agregarArco no está chequeando que el arco no exista previamente, por lo que se permite crear arcos duplicados.
  DONE   - El borrarArco primero busca el arco, y despues lo borra (doble recorrido). Se podría usar el metodo ""removeIf"" de List para evitar el doble recorrido."
   TODO implementacion:

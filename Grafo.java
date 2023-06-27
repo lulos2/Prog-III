@@ -1,8 +1,7 @@
-package practicoEspecialP2;
+package practicoEspecial;
 
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public interface Grafo<T> {
 
@@ -48,4 +47,6 @@ public interface Grafo<T> {
     Set<Integer> getVertices();
 
     public void hacerPesado();
+
+    public ArrayList<Arco<T>> getOrderEdges(Integer vertice);
 }

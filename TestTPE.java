@@ -1,3 +1,5 @@
+package practicoEspecial;
+import java.util.concurrent.Executors;
 import practico4.ServicioCaminoMasLargo;
 import practicoEspecial.*;
 
@@ -10,14 +12,15 @@ public class TestTPE {
 
 
         miGrafoParaCaminos.agregarVertice(1);
-        miGrafoParaCaminos.agregarVertice(2);
         miGrafoParaCaminos.agregarVertice(3);
+        miGrafoParaCaminos.agregarVertice(2);
         miGrafoParaCaminos.agregarVertice(4);
         miGrafoParaCaminos.agregarVertice(5);
         miGrafoParaCaminos.agregarVertice(6);
 
 
         miGrafoParaCaminos.agregarArco(1,2,"sapo");
+        miGrafoParaCaminos.agregarArco(2,1,"sapo");
         miGrafoParaCaminos.agregarArco(2,3,"sapo");
         miGrafoParaCaminos.agregarArco(1,4,"sapo");
         miGrafoParaCaminos.agregarArco(4,5,"sapo");
@@ -25,9 +28,14 @@ public class TestTPE {
         miGrafoParaCaminos.agregarArco(6,3,"sapo");
         miGrafoParaCaminos.agregarArco(1,3,"sapo");
 
+        miGrafoParaCaminos.borrarVertice(2);
+
+        miGrafoParaCaminos.borrarArco(1,100);
+        System.out.println(miGrafoParaCaminos.cantidadArcos());
+        miGrafoParaCaminos.obtenerArcos().forEachRemaining(System.out::println);
 
 
-        System.out.println("servicio DFS");
+      /*  System.out.println("servicio DFS");
         ServicioDFS servicioDFS = new ServicioDFS(miGrafoParaCaminos);
         System.out.println(servicioDFS.dfsForest());
 
@@ -42,6 +50,6 @@ public class TestTPE {
         System.out.println("servicio caminos ejercicio 1");
         ServicioCaminoMasLargo servicioCaminoMasLargo = new ServicioCaminoMasLargo(miGrafoParaCaminos,1, 3);
         System.out.println(servicioCaminoMasLargo.lowestCostPath());
-
+*/
     }
 }
