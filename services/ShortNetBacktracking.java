@@ -1,11 +1,9 @@
 package practicoEspecialP2.services;
 
 import practicoEspecial.Arco;
-import practicoEspecial.Grafo;
 import practicoEspecial.Tunnel;
+import practicoEspecial.Grafo;
 import practicoEspecialP2.CSVReader;
-
-
 import java.util.*;
 
 public class ShortNetBacktracking {
@@ -26,18 +24,27 @@ public class ShortNetBacktracking {
         this.iterations = 0;
         this.minimunDistance = Integer.MAX_VALUE;
         HashSet<Tunnel<?>> currentPath = new HashSet<>();
-        ArrayList<Arco<?>> visitedEdges = new ArrayList<>();
+        HashMap<Tunnel<?>,Integer> visitedEdges = new HashMap<>();
 
         for (Integer station: this.stations.getVertices()){
             findMinimumCoverTree(currentPath, station, 0, visitedEdges);
         }
-        return ("Backtracking: \n" + this.minimumCoverTree.toString());
+        ArrayList<Integer> stations = new ArrayList<>();
+        for (Arco<?> a: this.minimumCoverTree) {
+            stations.add(a.getVerticeOrigen());
+            stations.add(a.getVerticeDestino());
+        }
+        if(stations.stream().distinct().toList().size() < this.stations.getVertices().size()) {
+            this.minimunDistance = -1;
+            return "no hay solucion";
+        }
+        return this.minimumCoverTree.toString();
     }
 
     private void findMinimumCoverTree(HashSet<Tunnel<?>> currentPath,
                                       Integer actualStation,
                                       Integer currentLength,
-                                      ArrayList<Arco<?>> visitedEdges)
+                                      HashMap<Tunnel<?>,Integer> visitedEdges)
     {
         this.iterations++;
         if (currentLength >= this.minimunDistance) return;
@@ -52,20 +59,23 @@ public class ShortNetBacktracking {
         Iterator<? extends Arco<?>> it = this.stations.obtenerArcos(actualStation);
 
         while (it.hasNext()) {
-            Arco<?> actualEdge = it.next();
-            if(!visitedEdges.contains(actualEdge)) {
-                visitedEdges.add(actualEdge);
-                Tunnel<?> actualTunnel = new Tunnel<>(actualEdge);
-                if(currentPath.add(actualTunnel)) {
-                    currentLength += (Integer) actualEdge.getEtiqueta();
+            Tunnel<?> actualTunnel = new Tunnel<>(it.next());
+            Integer count = visitedEdges.getOrDefault(actualTunnel, 0);
+
+            if (count < 2) {
+                visitedEdges.put(actualTunnel, count + 1);
+                if (currentPath.add(actualTunnel)) {
+                    currentLength += (Integer) actualTunnel.getEtiqueta();
                 }
-                if(currentLength < minimunDistance) {
-                    findMinimumCoverTree(currentPath, actualEdge.getVerticeDestino(), currentLength, visitedEdges);
+                if (currentLength < minimunDistance) {
+                    findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedEdges);
                 }
-                visitedEdges.remove(actualEdge);
-                if(!visitedEdges.contains(actualEdge) && currentPath.contains(actualTunnel)) {
+                visitedEdges.put(actualTunnel, count);
+
+                if (count == 0) {
+                    visitedEdges.remove(actualTunnel);
                     currentPath.remove(actualTunnel);
-                    currentLength -= (Integer) actualEdge.getEtiqueta();
+                    currentLength -= (Integer) actualTunnel.getEtiqueta();
                 }
             }
         }
@@ -84,9 +94,16 @@ public class ShortNetBacktracking {
         return visited.values().stream().allMatch(x -> x);
     }
 
+    public void print() {
+        String sb = "";
+        sb += "Backtracking: \n";
+        sb += this.findMinimumCoverTree() + "\n";
+        sb += this.minimunDistance > 0 ? "Distancia minima: " + this.minimunDistance + " km\n" : "";
+        sb +=  "Iteraciones: " + this.iterations ;
+        System.out.println(sb);
+    }
 
-
-    public String getMinimumDistanceForConnectEveryStations(){
+    public String getMinimumDistance(){
         return this.minimunDistance + " km";
     }
     public int getIterations(){
