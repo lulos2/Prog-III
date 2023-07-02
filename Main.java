@@ -8,30 +8,21 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String path = "src/practicoEspecialP2/datasets/dataset1.txt";
+        String dataset1 = "src/practicoEspecialP2/datasets/dataset2.txt";
         String dataset2 = "src/practicoEspecialP2/datasets/dataset2.txt";
-        CSVReader reader = new CSVReader(path);
+        String dataset3 = "src/practicoEspecialP2/datasets/dataset3.txt";
+        CSVReader readerDataset1 = new CSVReader(dataset1);
         CSVReader readerDataset2 = new CSVReader(dataset2);
+        CSVReader readerDataset3 = new CSVReader(dataset3);
 
-        reader.read();
+        readerDataset1.read();
         readerDataset2.read();
+        readerDataset3.read();
 
-        ShortNetGreedy greedy = new ShortNetGreedy(reader);
-        ShortNetKruskal Kruskal = new ShortNetKruskal(reader);
-        ShortNetBacktracking backtracking = new ShortNetBacktracking(reader);
-        ShortNetBacktracking backtracking2 = new ShortNetBacktracking(readerDataset2);
+        ShortNetGreedy greedy = new ShortNetGreedy(readerDataset1);
+        ShortNetBacktracking backtracking = new ShortNetBacktracking(readerDataset1);
 
 
-        backtracking.print();
-        System.out.println("dataset2");
-        backtracking2.print();
-        /*System.out.println("----------------------------------------------------------------------------------------------------------------");
-        long startTimeBacktracking = System.nanoTime();
-        backtracking.print();
-        long endTimeBacktracking = System.nanoTime();
-        long totalTimeBacktracking = endTimeBacktracking - startTimeBacktracking;
-        System.out.println("Tiempo de ejecución backtracking : " + totalTimeBacktracking + " nanosegundos");
-        System.out.println("----------------------------------------------------------------------------------------------------------------");
         long startTimeGreedy = System.nanoTime();
         greedy.print();
         long endTimeGreedy = System.nanoTime();
@@ -39,14 +30,12 @@ public class Main {
         System.out.println("Tiempo de ejecución greedy : " + totalTimeGreedy + " nanosegundos");
 
         System.out.println("----------------------------------------------------------------------------------------------------------------");
-        long startTimeKruskal = System.nanoTime();
-        System.out.println(Kruskal.findMinimumCoverTree());
-        System.out.println(Kruskal.getMinimumDistance());
-        System.out.println(Kruskal.getIterations() + " iteraciones");
-        long endTimeKruskal = System.nanoTime();
-        long totalTimeKruskal = endTimeKruskal - startTimeKruskal;
-        System.out.println("Tiempo de ejecución Kruskal : " + totalTimeKruskal + " nanosegundos");
-   */
+
+        long startTimeBacktracking = System.nanoTime();
+        backtracking.print();
+        long endTimeBacktracking = System.nanoTime();
+        long totalTimeBacktracking = endTimeBacktracking - startTimeBacktracking;
+        System.out.println("Tiempo de ejecución backtracking : " + totalTimeBacktracking + " nanosegundos");
     }
 
 }

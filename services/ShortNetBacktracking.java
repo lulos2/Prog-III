@@ -9,20 +9,26 @@ import java.util.*;
 public class ShortNetBacktracking {
 
     protected Grafo<?> stations;
+    protected ShortNetGreedy greedy;
     protected Integer minimunDistance;
-
     protected List<Arco<?>> minimumCoverTree;
-    protected Integer iterations;
+    protected int iterations;
 
     public ShortNetBacktracking(CSVReader csvReader) {
         this.stations = csvReader.getStations();
         this.minimumCoverTree = new ArrayList<>();
+        this.greedy = new ShortNetGreedy(csvReader);
+    }
+
+    private Integer aproximateDistance() {
+        greedy.findMinimumCoverTree();
+        this.iterations = this.greedy.getIterations();
+        return this.greedy.getMinimunDistance() != -1 ? this.greedy.getMinimunDistance() : Integer.MAX_VALUE;
     }
 
     public String findMinimumCoverTree() {
         this.minimumCoverTree.clear();
-        this.iterations = 0;
-        this.minimunDistance = Integer.MAX_VALUE;
+        this.minimunDistance = this.aproximateDistance();
         HashSet<Tunnel<?>> currentPath = new HashSet<>();
         HashMap<Tunnel<?>,Integer> visitedEdges = new HashMap<>();
 
@@ -46,10 +52,9 @@ public class ShortNetBacktracking {
                                       Integer currentLength,
                                       HashMap<Tunnel<?>,Integer> visitedEdges)
     {
+        if (currentLength > this.minimunDistance) return;
         this.iterations++;
-        if (currentLength >= this.minimunDistance) return;
-
-        if (allStationsVisited(currentPath) && currentPath.size() >= this.stations.getVertices().size()-1) {
+        if (allStationsVisited(currentPath)) {
             this.minimunDistance = currentLength;
             this.minimumCoverTree.clear();
             this.minimumCoverTree.addAll(currentPath);
@@ -61,7 +66,6 @@ public class ShortNetBacktracking {
         while (it.hasNext()) {
             Tunnel<?> actualTunnel = new Tunnel<>(it.next());
             Integer count = visitedEdges.getOrDefault(actualTunnel, 0);
-
             if (count < 2) {
                 visitedEdges.put(actualTunnel, count + 1);
                 if (currentPath.add(actualTunnel)) {
@@ -71,7 +75,6 @@ public class ShortNetBacktracking {
                     findMinimumCoverTree(currentPath, actualTunnel.getVerticeDestino(), currentLength, visitedEdges);
                 }
                 visitedEdges.put(actualTunnel, count);
-
                 if (count == 0) {
                     visitedEdges.remove(actualTunnel);
                     currentPath.remove(actualTunnel);
@@ -80,7 +83,6 @@ public class ShortNetBacktracking {
             }
         }
     }
-
 
     private boolean allStationsVisited(HashSet<Tunnel<?>> visitedEdges) {
         HashMap<Integer, Boolean> visited = new HashMap<>();
@@ -99,7 +101,7 @@ public class ShortNetBacktracking {
         sb += "Backtracking: \n";
         sb += this.findMinimumCoverTree() + "\n";
         sb += this.minimunDistance > 0 ? "Distancia minima: " + this.minimunDistance + " km\n" : "";
-        sb +=  "Iteraciones: " + this.iterations ;
+        sb +=  "Iteraciones: " + this.iterations;
         System.out.println(sb);
     }
 

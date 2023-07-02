@@ -66,4 +66,12 @@ public class ShortNetGreedy {
         sb +=  "Iteraciones: " + this.iterations ;
         System.out.println(sb);
     }
+
+    public Integer getMinimunDistance() {
+        return this.minimunDistance;
+    }
+
+    public int getIterations(){
+        return this.iterations;
+    }
 }
