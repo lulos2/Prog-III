@@ -1,16 +1,15 @@
-package practicoEspecialP2;
+package practicoEspecial.parte2;
 
-import practicoEspecialP2.services.ShortNetBacktracking;
-import practicoEspecialP2.services.ShortNetGreedy;
-import practicoEspecialP2.services.ShortNetKruskal;
+import practicoEspecial.parte2.services.ShortNetBacktracking;
+import practicoEspecial.parte2.services.ShortNetGreedy;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        String dataset1 = "src/practicoEspecialP2/datasets/dataset2.txt";
-        String dataset2 = "src/practicoEspecialP2/datasets/dataset2.txt";
-        String dataset3 = "src/practicoEspecialP2/datasets/dataset3.txt";
+        String dataset1 = "src/practicoEspecial/datasets/dataset2.txt";
+        String dataset2 = "src/practicoEspecial/datasets/dataset2.txt";
+        String dataset3 = "src/practicoEspecial/datasets/dataset3.txt";
         CSVReader readerDataset1 = new CSVReader(dataset1);
         CSVReader readerDataset2 = new CSVReader(dataset2);
         CSVReader readerDataset3 = new CSVReader(dataset3);

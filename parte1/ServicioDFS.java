@@ -1,11 +1,11 @@
-package practicoEspecial;
+package practicoEspecial.parte1;
 
 
 import java.util.*;
 
 public class ServicioDFS {
 
-    private Grafo<?> grafo;
+    private practicoEspecial.parte1.Grafo<?> grafo;
 
     public ServicioDFS(Grafo<?> grafo) {
         this.grafo = grafo;

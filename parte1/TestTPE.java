@@ -1,13 +1,10 @@
-package practicoEspecial;
-import java.util.concurrent.Executors;
-import practico4.ServicioCaminoMasLargo;
-import practicoEspecial.*;
+package practicoEspecial.parte1;
 
 public class TestTPE {
     public static void main(String[] args) {
 
-        Grafo<String> miGrafoParaCaminos = new GrafoDirigido<String>();
-        Grafo<Character> miGrafoParaBFS = new GrafoDirigido<Character>();
+        practicoEspecial.parte1.Grafo<String> miGrafoParaCaminos = new practicoEspecial.parte1.GrafoDirigido<String>();
+        practicoEspecial.parte1.Grafo<Character> miGrafoParaBFS = new practicoEspecial.parte1.GrafoDirigido<Character>();
         Grafo<Character> miGrafin = new GrafoDirigido<Character>();
 
 

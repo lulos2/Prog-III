@@ -1,4 +1,4 @@
-package practicoEspecial;
+package practicoEspecial.parte1;
 
 public class Arco<T> {
 

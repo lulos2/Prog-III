@@ -1,10 +1,10 @@
-package practicoEspecial;
+package practicoEspecial.parte1;
 
 import java.util.*;
 
 public class GrafoDirigido<T> implements Grafo<T> {
 
-    protected HashMap<Integer, LinkedList<Arco<? extends T>>> vertices;
+    protected HashMap<Integer, LinkedList<practicoEspecial.parte1.Arco<? extends T>>> vertices;
     protected Integer cantArcos;
 
     public GrafoDirigido() {
@@ -25,7 +25,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//borrarVertice(int verticeId): la complejidad temporal es O(N^2), porque en el peor de los casos donde el grafo es pesado y cada uno de los N vertices tiene N aristas
     public void borrarVertice(int verticeId) {
-        for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
+        for (Map.Entry<Integer, LinkedList<practicoEspecial.parte1.Arco<? extends T>>> entry : vertices.entrySet()) {
             if (entry.getValue().removeIf(x -> x.getVerticeDestino() == verticeId)) {
                 cantArcos --;
             }
@@ -40,7 +40,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
     public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
         if(this.vertices.containsKey(verticeId1)&&this.vertices.containsKey(verticeId2)) {
             if(!this.existeArco(verticeId1,verticeId2)) {
-                vertices.get(verticeId1).add((new Arco<>(verticeId1, verticeId2, etiqueta)));
+                vertices.get(verticeId1).add((new practicoEspecial.parte1.Arco<>(verticeId1, verticeId2, etiqueta)));
                 cantArcos++;
             }
         }
@@ -66,12 +66,12 @@ public class GrafoDirigido<T> implements Grafo<T> {
     }
 
     @Override//obtenerArco(int verticeId1, int verticeId2): la complejidad temporal es O(N), donde N es el número de arcos en la lista de adyacencia correspondiente en el mapa vertices. Esto se debe a que se debe buscar el arco en la lista de adyacencia correspondiente en el mapa vertices.
-    public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
-        LinkedList<Arco<? extends T>> arcosDeV1 = vertices.get(verticeId1);
+    public practicoEspecial.parte1.Arco<T> obtenerArco(int verticeId1, int verticeId2) {
+        LinkedList<practicoEspecial.parte1.Arco<? extends T>> arcosDeV1 = vertices.get(verticeId1);
         if (arcosDeV1 != null) {
-            for (Arco<? extends T> i : arcosDeV1) {
+            for (practicoEspecial.parte1.Arco<? extends T> i : arcosDeV1) {
                 if (i.getVerticeDestino() == verticeId2) {
-                    return (Arco<T>) i;
+                    return (practicoEspecial.parte1.Arco<T>) i;
                 }
             }
         }
@@ -96,27 +96,27 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override//obtenerAdyacentes(int verticeId):O(m), donde m es el número de arcos que salen del vértice dado.
     public Iterator<Integer> obtenerAdyacentes(int verticeId) {
-        List<Arco<? extends T>> arcos = vertices.get(verticeId);
+        List<practicoEspecial.parte1.Arco<? extends T>> arcos = vertices.get(verticeId);
         List<Integer> adyacentes = new ArrayList<>();
-        for (Arco<? extends T> arco : arcos) {
+        for (practicoEspecial.parte1.Arco<? extends T> arco : arcos) {
             adyacentes.add(arco.getVerticeDestino());
         }
         return adyacentes.iterator();
     }
 
     @Override//obtenerArcos(): O(m), donde m es el número total de arcos en el grafo.
-    public Iterator<Arco<T>> obtenerArcos() {
-        LinkedList<Arco<? extends T>> arcosResult = new LinkedList<>();
-        for (Map.Entry<Integer, LinkedList<Arco<? extends T>>> entry : vertices.entrySet()) {
+    public Iterator<practicoEspecial.parte1.Arco<T>> obtenerArcos() {
+        LinkedList<practicoEspecial.parte1.Arco<? extends T>> arcosResult = new LinkedList<>();
+        for (Map.Entry<Integer, LinkedList<practicoEspecial.parte1.Arco<? extends T>>> entry : vertices.entrySet()) {
             arcosResult.addAll(entry.getValue());
         }
-        return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosResult).iterator();
+        return (Iterator<practicoEspecial.parte1.Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosResult).iterator();
     }
 
     @Override//obtenerArcos(int verticeId): O(m), donde m es el número de arcos que salen del vértice dado.
-    public Iterator<Arco<T>> obtenerArcos(int verticeId) {
-        LinkedList<Arco<? extends T>> arcosVertice = new LinkedList<>(vertices.get(verticeId));
-        return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosVertice).iterator();
+    public Iterator<practicoEspecial.parte1.Arco<T>> obtenerArcos(int verticeId) {
+        LinkedList<practicoEspecial.parte1.Arco<? extends T>> arcosVertice = new LinkedList<>(vertices.get(verticeId));
+        return (Iterator<practicoEspecial.parte1.Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosVertice).iterator();
     }
 
     @Override//metodo utilizado para testeos de eficiencia temporal
@@ -131,27 +131,27 @@ public class GrafoDirigido<T> implements Grafo<T> {
     }
 
     @Override
-    public ArrayList<Arco<T>> getOrderEdges(Integer vertice) {
-        Iterator<Arco<T>> edges = obtenerArcos(vertice);
-        ArrayList<Arco<T>> result = new ArrayList<>();
+    public ArrayList<practicoEspecial.parte1.Arco<T>> getOrderEdges(Integer vertice) {
+        Iterator<practicoEspecial.parte1.Arco<T>> edges = obtenerArcos(vertice);
+        ArrayList<practicoEspecial.parte1.Arco<T>> result = new ArrayList<>();
         while (edges.hasNext()) {
-            Arco<T> actualEdge = edges.next();
+            practicoEspecial.parte1.Arco<T> actualEdge = edges.next();
             result.add(actualEdge);
         }
         Collections.sort(result,comparador);
         return result;
     }
-    Comparator<Arco<?>> comparador = new Comparator<Arco<?>>() {
+    Comparator<practicoEspecial.parte1.Arco<?>> comparador = new Comparator<practicoEspecial.parte1.Arco<?>>() {
         @Override
-        public int compare(Arco<?> arco1, Arco<?> arco2) {
+        public int compare(practicoEspecial.parte1.Arco<?> arco1, practicoEspecial.parte1.Arco<?> arco2) {
             Integer etiqueta1 = (Integer) arco1.getEtiqueta();
             Integer etiqueta2 = (Integer) arco2.getEtiqueta();
             return etiqueta1.compareTo(etiqueta2);
         }
     };
 
-    public ArrayList<Arco<T>> getAllEdges(){
-        ArrayList<Arco<T>> arcos = new ArrayList<>();
+    public ArrayList<practicoEspecial.parte1.Arco<T>> getAllEdges(){
+        ArrayList<practicoEspecial.parte1.Arco<T>> arcos = new ArrayList<>();
         for (Iterator<? extends Arco<T>> it = obtenerArcos(); it.hasNext(); ) {
             arcos.add(it.next());
         }

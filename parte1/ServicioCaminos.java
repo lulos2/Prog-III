@@ -1,10 +1,10 @@
-package practicoEspecial;
+package practicoEspecial.parte1;
 
 import java.util.*;
 
 public class ServicioCaminos {
 
-    private Grafo<?> grafo;
+    private practicoEspecial.parte1.Grafo<?> grafo;
     private int origen;
     private int destino;
     private int lim;
@@ -21,7 +21,7 @@ public class ServicioCaminos {
     public List<List<Integer>> caminos() {
         List<Integer> caminoValido = new LinkedList<>();
         List<List<Integer>> caminos = new ArrayList<>();
-        HashSet<Arco<?>> arcosVisitados = new HashSet<>();
+        HashSet<practicoEspecial.parte1.Arco<?>> arcosVisitados = new HashSet<>();
         if(this.grafo.contieneVertice(origen) && this.grafo.contieneVertice(destino)) {
             encontrarCaminos(this.origen, this.lim, caminoValido, caminos, arcosVisitados);
         }
@@ -32,7 +32,7 @@ public class ServicioCaminos {
                                   Integer limite,
                                   List<Integer> caminoValido,
                                   List<List<Integer>> caminos,
-                                  HashSet<Arco<?>> arcosVisitados
+                                  HashSet<practicoEspecial.parte1.Arco<?>> arcosVisitados
                                   )
     {
         caminoValido.add(idVerticeActual);
@@ -40,7 +40,7 @@ public class ServicioCaminos {
         if(this.destino == idVerticeActual && limite >= 0) {
             caminos.add(new ArrayList<>(caminoValido));
         }
-        Iterator<? extends Arco<?>> arcos = this.grafo.obtenerArcos(idVerticeActual);
+        Iterator<? extends practicoEspecial.parte1.Arco<?>> arcos = this.grafo.obtenerArcos(idVerticeActual);
         while (arcos.hasNext()) {
             Arco<?> arcoActual = arcos.next();
             if(!arcosVisitados.contains(arcoActual)) {

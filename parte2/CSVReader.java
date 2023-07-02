@@ -1,7 +1,6 @@
-package practicoEspecialP2;
+package practicoEspecial.parte2;
 
-import practicoEspecial.Arco;
-import practicoEspecial.GrafoNoDirigido;
+import practicoEspecial.parte1.GrafoNoDirigido;
 
 import java.io.BufferedReader;
 import java.io.File;

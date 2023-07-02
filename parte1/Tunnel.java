@@ -1,6 +1,6 @@
-package practicoEspecial;
+package practicoEspecial.parte1;
 
-public class Tunnel<T> extends Arco<T>{
+public class Tunnel<T> extends practicoEspecial.parte1.Arco<T> {
 
     public Tunnel(int verticeOrigen, int verticeDestino, T etiqueta) {
         super(verticeOrigen, verticeDestino, etiqueta);

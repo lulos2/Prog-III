@@ -1,4 +1,4 @@
-package practicoEspecial;
+package practicoEspecial.parte1;
 
 
 import java.util.*;
@@ -24,7 +24,7 @@ public interface Grafo<T> {
     public boolean existeArco(int verticeId1, int verticeId2);
 
     // Obtener el arco que conecta el verticeId1 con el verticeId2
-    public Arco<T> obtenerArco(int verticeId1, int verticeId2);
+    public practicoEspecial.parte1.Arco<T> obtenerArco(int verticeId1, int verticeId2);
 
     // Devuelve la cantidad total de vertices en el grafo
     public int cantidadVertices();
@@ -39,10 +39,10 @@ public interface Grafo<T> {
     public Iterator<Integer> obtenerAdyacentes(int verticeId);
 
     // Obtiene un iterador que me permite recorrer todos los arcos del grafo
-    public Iterator<Arco<T>> obtenerArcos();
+    public Iterator<practicoEspecial.parte1.Arco<T>> obtenerArcos();
 
     // Obtiene un iterador que me permite recorrer todos los arcos que parten desde verticeId
-    public Iterator<Arco<T>> obtenerArcos(int verticeId);
+    public Iterator<practicoEspecial.parte1.Arco<T>> obtenerArcos(int verticeId);
 
     Set<Integer> getVertices();
 
