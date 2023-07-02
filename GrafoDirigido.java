@@ -119,7 +119,6 @@ public class GrafoDirigido<T> implements Grafo<T> {
         return (Iterator<Arco<T>>) new ArrayList<T>((Collection<? extends T>) arcosVertice).iterator();
     }
 
-
     @Override//metodo utilizado para testeos de eficiencia temporal
     public void hacerPesado() {
         for (Integer i : vertices.keySet()){
@@ -130,12 +129,11 @@ public class GrafoDirigido<T> implements Grafo<T> {
             }
         }
     }
+
     @Override
     public ArrayList<Arco<T>> getOrderEdges(Integer vertice) {
-        Integer minValue = Integer.MAX_VALUE;
         Iterator<Arco<T>> edges = obtenerArcos(vertice);
         ArrayList<Arco<T>> result = new ArrayList<>();
-        Arco<T> minEdge = new Arco<>(0,0,(T)"pa");
         while (edges.hasNext()) {
             Arco<T> actualEdge = edges.next();
             result.add(actualEdge);
@@ -151,6 +149,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
             return etiqueta1.compareTo(etiqueta2);
         }
     };
+
     public ArrayList<Arco<T>> getAllEdges(){
         ArrayList<Arco<T>> arcos = new ArrayList<>();
         for (Iterator<? extends Arco<T>> it = obtenerArcos(); it.hasNext(); ) {
@@ -177,5 +176,4 @@ public class GrafoDirigido<T> implements Grafo<T> {
  DONE   - El borrarArco primero busca el arco, y despues lo borra (doble recorrido). Se podría usar el metodo ""removeIf"" de List para evitar el doble recorrido."
   TODO implementacion:
 "-DONE    La cantidad de arcos la calculan cada vez que se las piden. Se podría haber llevado pre-calculada en una variable (tal y como hicieron con el size en la Lista vinculada que implementaron en el TP1.
-     ?  - La complejidad del obtenerAdyacentes podría haberse reducido facilmente a O(1) implementando un Iterator<Integer> que encapsulara al Iterator<Arco>."
 */

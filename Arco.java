@@ -29,12 +29,9 @@ public class Arco<T> {
         return "E" + verticeOrigen + "-" + "E" + verticeDestino;
     }
 
-
-
     public Arco<T> reverse() {
         return new Arco<>(this.verticeDestino, this.verticeOrigen, this.etiqueta);
     }
-
 
 }
 
